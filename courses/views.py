@@ -36,7 +36,14 @@ def logout_view(request):
 
 
 def home(request):
-    return render(request, 'home.html', {'courses': []})
+    query = request.GET.get('q')
+
+    if query:
+        courses = Course.objects.filter(title__icontains=query)
+    else:
+        courses = Course.objects.all()
+
+    return render(request, 'home.html', {'courses': courses})
 
 
 def course_detail(request, id):
