@@ -64,9 +64,9 @@
                     {{ forloop.counter }}. {{ lesson.title }}
                 </a>
 
-                {% if lesson.id in completed_lessons %}
-                    <span class="text-green-600 text-sm">✔</span>
-                {% endif %}
+                {% if completed_lessons and lesson.id in completed_lessons %}
+    <span class="text-green-600 text-sm">✔</span>
+{% endif %}
 
             </div>
 

@@ -34,6 +34,7 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+
 def home(request):
     query = request.GET.get('q')
 
@@ -58,11 +59,14 @@ def course_detail(request, id):
             course=course
         ).exists()
 
-        completed_lessons = LessonCompletion.objects.filter(
-            user=request.user,
-            lesson__course=course,
-            completed=True
-        ).values_list('lesson_id', flat=True)
+        # 🔥 FIXED: convert queryset to list (important for production)
+        completed_lessons = list(
+            LessonCompletion.objects.filter(
+                user=request.user,
+                lesson__course=course,
+                completed=True
+            ).values_list('lesson_id', flat=True)
+        )
 
     total_lessons = lessons.count()
     completed_count = len(completed_lessons)
@@ -82,14 +86,14 @@ def course_detail(request, id):
 
 @login_required
 def enroll_course(request, course_id):
-    course = Course.objects.get(id=course_id)
+    course = get_object_or_404(Course, id=course_id)
     Enrollment.objects.get_or_create(user=request.user, course=course)
     return redirect('course_detail', id=course.id)
 
 
 @login_required
 def mark_complete(request, lesson_id):
-    lesson = Lesson.objects.get(id=lesson_id)
+    lesson = get_object_or_404(Lesson, id=lesson_id)
     LessonCompletion.objects.update_or_create(
         user=request.user,
         lesson=lesson,
@@ -123,7 +127,7 @@ def dashboard(request):
             'course': course,
             'progress': progress,
             'completed': completed,
-            'total': total            
+            'total': total
         })
 
     return render(request, 'dashboard.html', {
@@ -131,13 +135,12 @@ def dashboard(request):
     })
 
 
-
 def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course = lesson.course
 
     lessons = list(course.lesson_set.all())
-    lesson_index = lessons.index(lesson) + 1 
+    lesson_index = lessons.index(lesson) + 1
 
     is_enrolled = False
     if request.user.is_authenticated:
