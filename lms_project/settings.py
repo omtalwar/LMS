@@ -29,10 +29,7 @@ INSTALLED_APPS = [
 # 🔥 MIDDLEWARE (WhiteNoise added)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    # 👇 ADD THIS LINE
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -49,7 +46,7 @@ ROOT_URLCONF = 'lms_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],  # keep your templates folder
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,7 +62,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'lms_project.wsgi.application'
 
 
-# 🔥 DATABASE (keep SQLite for now)
+# 🔥 DATABASE
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -93,22 +90,21 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # 🌍 INTERNATIONAL
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# 🔥 STATIC FILES (IMPORTANT FOR DEPLOY)
+# 🔥 STATIC FILES (FIXED FOR RENDER)
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# ⚠️ IMPORTANT FIX (no static folder issues in production)
+STATICFILES_DIRS = []
+
+# ✅ WhiteNoise optimized static serving
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # 🔥 DEFAULT PRIMARY KEY
