@@ -5,12 +5,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # 🔐 SECURITY
-SECRET_KEY = 'django-insecure-7-_s=n8q005&cjz-x33un4zvmod_a)cz+#l&iujlj-(zm+ag3e'
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
 
-DEBUG = True
+# ❌ NEVER keep DEBUG True in production
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# 🔥 IMPORTANT FOR DEPLOY
-ALLOWED_HOSTS = ['*']
+# 🔥 Railway / production hosts
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ".railway.app,localhost,127.0.0.1").split(",")
 
 
 # 🔥 APPS
@@ -26,13 +27,19 @@ INSTALLED_APPS = [
 ]
 
 
-# 🔥 MIDDLEWARE (WhiteNoise added)
+# 🔥 MIDDLEWARE (WhiteNoise enabled)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    # WhiteNoise MUST be right after SecurityMiddleware
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+
+    # Optional but recommended later (CSRF secure for prod)
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -46,7 +53,10 @@ ROOT_URLCONF = 'lms_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+
+        # safer absolute path
+        'DIRS': [BASE_DIR / "templates"],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,6 +73,7 @@ WSGI_APPLICATION = 'lms_project.wsgi.application'
 
 
 # 🔥 DATABASE
+# Railway can override this later if you add PostgreSQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -95,15 +106,16 @@ USE_I18N = True
 USE_TZ = True
 
 
-# 🔥 STATIC FILES (FIXED FOR RENDER)
+# 🔥 STATIC FILES (PRODUCTION SAFE)
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# where collectstatic will dump files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ⚠️ IMPORTANT FIX (no static folder issues in production)
+# keep empty unless you have a local static folder
 STATICFILES_DIRS = []
 
-# ✅ WhiteNoise optimized static serving
+# WhiteNoise optimized static serving
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
