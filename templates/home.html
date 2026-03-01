@@ -27,15 +27,26 @@
 
 <div class="flex flex-wrap gap-3 mb-10">
 
-    {% for course in courses %}
-        {% if course.category %}
-            <span class="px-4 py-2 bg-white rounded-full shadow text-sm text-gray-700 hover:bg-blue-600 hover:text-white transition">
-                {{ course.category.name }}
-            </span>
-        {% endif %}
+    <!-- All button -->
+    <a href="/"
+       class="px-4 py-2 bg-white rounded-full shadow text-sm text-gray-700 hover:bg-blue-600 hover:text-white transition">
+        All
+    </a>
+
+    {% for category in categories %}
+        <a href="/?category={{ category.name }}"
+   class="px-4 py-2 rounded-full shadow text-sm transition
+   {% if request.GET.category == category.name %}
+       bg-blue-600 text-white
+   {% else %}
+       bg-white text-gray-700 hover:bg-blue-600 hover:text-white
+   {% endif %}">
+    {{ category.name }}
+</a>
     {% endfor %}
 
 </div>
+
 
 <!-- 🔥 COURSES -->
 <div class="flex justify-between items-center mb-4">

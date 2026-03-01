@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, Lesson, Enrollment, LessonCompletion
+from .models import Course, Lesson, Enrollment, LessonCompletion, Category
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+
 
 
 def signup_view(request):
@@ -35,15 +36,24 @@ def logout_view(request):
     return redirect('home')
 
 
+
 def home(request):
     query = request.GET.get('q')
+    category_name = request.GET.get('category')
+
+    courses = Course.objects.all()
+    categories = Category.objects.all()
 
     if query:
-        courses = Course.objects.filter(title__icontains=query)
-    else:
-        courses = Course.objects.all()
+        courses = courses.filter(title__icontains=query)
 
-    return render(request, 'home.html', {'courses': courses})
+    if category_name:
+        courses = courses.filter(category__name=category_name)
+
+    return render(request, 'home.html', {
+        'courses': courses,
+        'categories': categories
+    })
 
 
 def course_detail(request, id):
