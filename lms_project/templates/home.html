@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- 🔥 HERO (IMAGE + OVERLAY) -->
+<div class="relative rounded-2xl overflow-hidden mb-12 shadow-lg" data-aos="fade-up">
+
+    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644"
+         class="w-full h-[300px] object-cover">
+
+    <div class="absolute inset-0 bg-black/50 flex items-center">
+        <div class="px-10 text-white">
+            <h1 class="text-4xl font-bold mb-3">Learn Without Limits</h1>
+            <p class="text-lg opacity-90 mb-4">Start, switch, or advance your career</p>
+
+            <form method="GET" class="max-w-md">
+                <input type="text" name="q" placeholder="Search courses..."
+                    class="w-full p-3 rounded-lg text-black focus:outline-none">
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<!-- 🔥 CATEGORIES SECTION -->
+<h2 class="text-2xl font-semibold mb-4">Categories</h2>
+
+<div class="flex flex-wrap gap-3 mb-10">
+
+    {% for course in courses %}
+        {% if course.category %}
+            <span class="px-4 py-2 bg-white rounded-full shadow text-sm text-gray-700 hover:bg-blue-600 hover:text-white transition">
+                {{ course.category.name }}
+            </span>
+        {% endif %}
+    {% endfor %}
+
+</div>
+
+<!-- 🔥 COURSES -->
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-semibold">Popular Courses</h2>
+</div>
+
+<div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+{% for course in courses %}
+    <div class="bg-white rounded-xl shadow hover:shadow-2xl transition transform hover:-translate-y-1">
+
+        <!-- Thumbnail -->
+        <img src="{{ course.thumbnail|default:'https://source.unsplash.com/400x200/?learning' }}"
+             class="rounded-t-xl w-full h-36 object-cover">
+
+        <div class="p-4">
+
+            <!-- Category -->
+            {% if course.category %}
+                <p class="text-xs text-blue-600 font-medium mb-1">
+                    {{ course.category.name }}
+                </p>
+            {% endif %}
+
+            <!-- Title -->
+            <h3 class="text-sm font-bold mb-2 leading-snug">
+                <a href="/course/{{ course.id }}/" class="hover:text-blue-600">
+                    {{ course.title }}
+                </a>
+            </h3>
+
+            <!-- Description -->
+            <p class="text-xs text-gray-500 mb-3">
+                {{ course.description|truncatewords:10 }}
+            </p>
+
+            <!-- Fake rating (for realism) -->
+            <p class="text-xs text-yellow-500">
+                ⭐ 4.5 • 1,200 students
+            </p>
+
+        </div>
+    </div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

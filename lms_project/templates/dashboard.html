@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- 🔥 HEADER -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold">My Learning</h1>
+    <p class="text-gray-500 text-sm mt-1">
+        Track your progress and continue your courses
+    </p>
+</div>
+
+<!-- 🔥 COURSES GRID -->
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+{% for item in data %}
+<div class="bg-white rounded-xl shadow hover:shadow-2xl transition overflow-hidden">
+
+    <!-- Thumbnail -->
+    <img src="{{ item.course.thumbnail|default:'https://source.unsplash.com/400x200/?learning' }}"
+         class="w-full h-36 object-cover">
+
+    <div class="p-4">
+
+        <!-- Title -->
+        <h2 class="text-sm font-bold mb-2 leading-snug">
+            {{ item.course.title }}
+        </h2>
+
+        <!-- Lessons Count -->
+        <p class="text-xs text-gray-500 mb-3">
+            {{ item.completed }} / {{ item.total }} lessons completed
+        </p>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-2 overflow-hidden">
+            <div class="bg-blue-500 h-2 rounded-full transition-all duration-700"
+                 data-progress="{{ item.progress }}">
+            </div>
+        </div>
+
+        <!-- Percentage -->
+        <p class="text-xs text-gray-500 mb-4">
+            {{ item.progress }}% completed
+        </p>
+
+        <!-- CTA -->
+        <a href="/course/{{ item.course.id }}/"
+           class="inline-block text-blue-600 text-sm font-medium hover:underline">
+            Continue Learning →
+        </a>
+
+    </div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- 🔥 SCRIPT -->
+<script>
+    document.querySelectorAll('[data-progress]').forEach(el => {
+        el.style.width = el.getAttribute('data-progress') + '%';
+    });
+</script>
+
+{% endblock %}
