@@ -29,29 +29,29 @@
             LMS
         </a>
 
-        <!-- Links -->
-        <div class="flex items-center space-x-6 text-sm font-medium">
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
 
             <a href="/" class="text-gray-700 hover:text-blue-600 transition">
                 Home
             </a>
 
-            <a href="/dashboard/" class="text-gray-700 hover:text-blue-600 transition">
-                Dashboard
-            </a>
+            {% if user.is_authenticated %}
+                <a href="/dashboard/" class="text-gray-700 hover:text-blue-600 transition">
+                    Dashboard
+                </a>
+            {% endif %}
 
             {% if user.is_authenticated %}
-                <span class="text-gray-500 hidden sm:block">
+                <span class="text-gray-500">
                     👋 {{ user.username }}
                 </span>
 
-                <a href="/logout/"
-                   class="text-red-500 hover:text-red-600 transition">
+                <a href="/logout/" class="text-red-500 hover:text-red-600 transition">
                     Logout
                 </a>
             {% else %}
-                <a href="/login/"
-                   class="text-blue-600 hover:underline">
+                <a href="/login/" class="text-blue-600 hover:underline">
                     Login
                 </a>
 
@@ -60,8 +60,44 @@
                     Signup
                 </a>
             {% endif %}
-
         </div>
+
+        <!-- Mobile Button -->
+        <button id="menuBtn" class="md:hidden text-gray-700 text-2xl">
+            ☰
+        </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 space-y-3 text-sm font-medium bg-white border-t">
+
+        <a href="/" class="block text-gray-700 hover:text-blue-600">
+            Home
+        </a>
+
+        {% if user.is_authenticated %}
+            <a href="/dashboard/" class="block text-gray-700 hover:text-blue-600">
+                Dashboard
+            </a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <div class="text-gray-500">
+                👋 {{ user.username }}
+            </div>
+
+            <a href="/logout/" class="block text-red-500">
+                Logout
+            </a>
+        {% else %}
+            <a href="/login/" class="block text-blue-600">
+                Login
+            </a>
+
+            <a href="/signup/" class="block bg-blue-600 text-white px-4 py-2 rounded-lg text-center">
+                Signup
+            </a>
+        {% endif %}
     </div>
 </nav>
 
@@ -85,6 +121,19 @@
     AOS.init({
         duration: 700,
         once: true
+    });
+</script>
+
+<!-- Mobile Menu Script -->
+<script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+
+        // Toggle icon
+        menuBtn.innerText = mobileMenu.classList.contains("hidden") ? "☰" : "✖";
     });
 </script>
 
