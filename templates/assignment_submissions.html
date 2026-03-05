@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-6">
+Submissions - {{ assignment.title }}
+</h1>
+
+<div class="space-y-6">
+
+{% for submission in submissions %}
+
+<div class="bg-white shadow rounded-lg p-6">
+
+<p class="font-semibold mb-2">
+Student: {{ submission.student.username }}
+</p>
+
+<a href="{{ submission.file.url }}"
+class="text-blue-600 underline">
+Download Submission
+</a>
+
+<form method="POST" class="mt-4 space-y-3">
+
+{% csrf_token %}
+
+<input type="hidden" name="submission_id" value="{{ submission.id }}">
+
+<div>
+<label class="block text-sm">Marks</label>
+<input type="number"
+name="marks"
+value="{{ submission.marks }}"
+class="border rounded p-2 w-32">
+</div>
+
+<div>
+<label class="block text-sm">Feedback</label>
+<textarea name="feedback"
+class="border rounded p-2 w-full">{{ submission.feedback }}</textarea>
+</div>
+
+<button
+class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+Save Grade
+</button>
+
+</form>
+
+</div>
+
+{% empty %}
+
+<p>No submissions yet.</p>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6">Create Course</h2>
+
+<form method="POST" class="space-y-4 max-w-lg">
+    {% csrf_token %}
+
+    <input type="text" name="title" placeholder="Course Title"
+        class="w-full p-3 border rounded-lg" required>
+
+    <textarea name="description" placeholder="Description"
+        class="w-full p-3 border rounded-lg" required></textarea>
+
+    <input type="text" name="thumbnail" placeholder="Thumbnail URL"
+        class="w-full p-3 border rounded-lg">
+
+    <select name="category" class="w-full p-3 border rounded-lg" required>
+        <option value="">Select Category</option>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit"
+        class="bg-blue-600 text-white px-6 py-2 rounded-lg">
+        Create Course
+    </button>
+
+</form>
+
+{% endblock %}

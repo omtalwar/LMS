@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">Submit Assignment</h1>
+
+<p class="text-red-500 mb-6">
+Deadline: {{ assignment.deadline }}
+</p>
+
+{% if error %}
+<p class="text-red-600 mb-4">{{ error }}</p>
+{% endif %}
+
+<form method="POST"
+      action="{% url 'submit_assignment' assignment.id %}"
+      enctype="multipart/form-data"
+      class="bg-white shadow rounded-xl p-6 max-w-xl space-y-4">
+
+{% csrf_token %}
+
+<div>
+<label class="block mb-2 font-medium">Upload File</label>
+
+<input type="file"
+       name="file"
+       required
+       class="border p-2 rounded w-full">
+</div>
+
+<button type="submit"
+class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+Submit Assignment
+</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+<h1 class="text-3xl font-bold mb-3">
+{{ assignment.title }}
+</h1>
+
+<p class="text-gray-600 mb-4">
+{{ assignment.description }}
+</p>
+
+<p class="text-red-500 text-sm mb-6">
+Deadline: {{ assignment.deadline }}
+</p>
+
+
+{% if user == assignment.course.teacher %}
+
+<div class="flex gap-3 mb-6">
+
+<a href="/assignment-submissions/{{ assignment.id }}/"
+class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+View Submissions
+</a>
+
+<a href="/delete-assignment/{{ assignment.id }}/"
+class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+onclick="return confirm('Delete this assignment?')">
+Delete Assignment
+</a>
+
+</div>
+
+{% endif %}
+
+
+{% if submission %}
+
+<div class="bg-green-100 border border-green-300 p-4 rounded-lg mb-6">
+
+<p class="font-semibold mb-2">
+Assignment Submitted
+</p>
+
+<p class="text-sm text-gray-600 mb-3">
+Submitted on: {{ submission.submitted_at }}
+</p>
+
+<a href="{{ submission.file.url }}"
+class="text-blue-600 underline">
+Download Your Submission
+</a>
+
+</div>
+
+
+<div class="bg-white shadow rounded-lg p-5">
+
+<h2 class="text-lg font-semibold mb-3">
+Your Result
+</h2>
+
+<p class="mb-2">
+<strong>Marks:</strong>
+
+{% if submission.marks %}
+{{ submission.marks }}
+{% else %}
+Not graded yet
+{% endif %}
+
+</p>
+
+<p>
+<strong>Feedback:</strong><br>
+
+{% if submission.feedback %}
+{{ submission.feedback }}
+{% else %}
+No feedback yet
+{% endif %}
+
+</p>
+
+</div>
+
+
+{% else %}
+
+{% if assignment.deadline < now %}
+
+<p class="text-red-600 font-semibold">
+Submission closed. Deadline passed.
+</p>
+
+{% else %}
+
+<a href="{% url 'submit_assignment' assignment.id %}"
+class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">
+Submit Assignment
+</a>
+
+{% endif %}
+
+{% endif %}
+
+</div>
+
+{% endblock %}

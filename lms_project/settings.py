@@ -9,6 +9,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # ❌ NEVER keep DEBUG True in production
 DEBUG = os.getenv("DEBUG", "False") == "True"
+# DEBUG = True
 
 # 🔥 Railway / production hosts
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
@@ -101,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # 🌍 INTERNATIONAL
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
@@ -121,3 +122,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # 🔥 DEFAULT PRIMARY KEY
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

@@ -2,90 +2,71 @@
 
 {% block content %}
 
-<div class="grid lg:grid-cols-3 gap-8">
+<div class="grid lg:grid-cols-4 gap-10">
 
-    <!-- 🔥 LEFT: LESSON LIST -->
-    <div class="bg-white rounded-xl shadow p-4 h-[75vh] overflow-y-auto">
+    <!-- MAIN LESSON AREA -->
+    <div class="lg:col-span-3">
 
-        <h2 class="font-bold text-lg mb-4">Course Content</h2>
+         
+    {% if user == course.teacher %}
 
-        {% for l in course.lesson_set.all %}
-        <div class="mb-3 p-3 rounded-lg hover:bg-gray-100 transition">
+<a href="/mark-attendance/{{ lesson.id }}/"
+class="bg-yellow-600 text-white px-4 py-2 rounded mb-16">
+Mark Attendance
+</a>
 
-            <a href="/lesson/{{ l.id }}/"
-               class="text-sm font-medium
-               {% if l.id == lesson.id %}text-blue-600 font-bold{% else %}text-gray-700{% endif %}">
-               
-               {{ forloop.counter }}. {{ l.title }}
-            </a>
+{% endif %}
 
-        </div>
-        {% endfor %}
-
-    </div>
-
-    <!-- 🔥 RIGHT: LESSON PLAYER -->
-    <div class="lg:col-span-2">
-
-        <!-- Title -->
-        <h1 class="text-2xl font-bold mb-4">
+        <h1 class="text-3xl font-bold mb-6 mt-5">
             {{ lesson.title }}
         </h1>
 
-        <div class="bg-white p-6 rounded-xl shadow">
-
-        {% if user.is_authenticated %}
-
-            {% if lesson_index <= 2 or is_enrolled %}
-
-                <!-- CONTENT -->
-                <p class="mb-6 text-gray-700 leading-relaxed">
-                    {{ lesson.content }}
-                </p>
-
-                <!-- VIDEO -->
-                {% if lesson.video_url %}
-                    <a href="{{ lesson.video_url }}" target="_blank"
-                       class="inline-block mb-6 text-blue-600 underline">
-                        ▶ Watch Video
-                    </a>
-                {% endif %}
-
-                <!-- COMPLETE BUTTON -->
-                {% if is_enrolled %}
-                    <div>
-                        {% if is_completed %}
-                            <span class="text-green-600 font-semibold text-lg">
-                                ✔ Completed
-                            </span>
-                        {% else %}
-                            <a href="/complete/{{ lesson.id }}/"
-                               class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition">
-                                Mark as Complete
-                            </a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-
-            {% else %}
-                <p class="text-red-500">
-                    🔒 Enroll to unlock this lesson
-                </p>
-            {% endif %}
-
-        {% else %}
-            <p class="text-gray-500">
-                Login required to view content
-            </p>
+        {% if lesson.video %}
+        <div class="mb-6">
+            <video controls class="w-full rounded-lg shadow">
+                <source src="{{ lesson.video.url }}" type="video/mp4">
+            </video>
+        </div>
         {% endif %}
 
+        <div class="bg-white shadow rounded-lg p-6">
+            {{ lesson.content }}
         </div>
 
-        <!-- BACK -->
-        <a href="/course/{{ course.id }}/"
-           class="block mt-6 text-blue-600 hover:underline">
-            ← Back to Course
-        </a>
+        <div class="mt-6">
+            <a href="/course/{{ course.id }}/"
+               class="text-blue-600 hover:underline">
+                ← Back to Course
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- SIDEBAR -->
+    <div class="bg-white shadow rounded-lg p-6 h-fit">
+
+
+        <h2 class="font-semibold mb-4">
+            Course Content
+        </h2>
+
+        <div class="space-y-3 max-h-[500px] overflow-y-auto">
+
+
+            {% for l in course.lesson_set.all %}
+
+            <a href="/lesson/{{ l.id }}/"
+               class="block p-2 rounded hover:bg-gray-100
+               {% if l.id == lesson.id %}bg-blue-100{% endif %}">
+
+                {{ forloop.counter }}. {{ l.title }}
+
+            </a>
+
+            {% endfor %}
+
+        </div>
 
     </div>
 

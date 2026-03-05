@@ -2,66 +2,145 @@
 
 {% block content %}
 
-<!-- 🔥 HEADER -->
-<div class="mb-8">
-    <h1 class="text-3xl font-bold">My Learning</h1>
-    <p class="text-gray-500 text-sm mt-1">
-        Track your progress and continue your courses
-    </p>
+<h1 class="text-3xl font-bold mb-8">Dashboard</h1>
+
+
+{% if user.profile.role == "teacher" %}
+
+<!-- TEACHER DASHBOARD -->
+
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-semibold">Your Courses</h2>
+
+    <a href="/add-course/"
+       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+        + Create Course
+    </a>
 </div>
 
-<!-- 🔥 COURSES GRID -->
-<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-{% for item in data %}
-<div class="bg-white rounded-xl shadow hover:shadow-2xl transition overflow-hidden">
+<div class="grid md:grid-cols-3 gap-6">
 
-    <!-- Thumbnail -->
-    <img src="{{ item.course.thumbnail|default:'https://source.unsplash.com/400x200/?learning' }}"
-         class="w-full h-36 object-cover">
+{% for course in user.course_set.all %}
+
+<div class="bg-white shadow rounded-xl overflow-hidden">
+
+    <img src="{{ course.thumbnail }}"
+         class="w-full h-40 object-cover">
 
     <div class="p-4">
 
-        <!-- Title -->
-        <h2 class="text-sm font-bold mb-2 leading-snug">
-            {{ item.course.title }}
-        </h2>
+        <h3 class="font-semibold text-lg mb-3">
+            {{ course.title }}
+        </h3>
 
-        <!-- Lessons Count -->
-        <p class="text-xs text-gray-500 mb-3">
-            {{ item.completed }} / {{ item.total }} lessons completed
-        </p>
+        <div class="flex flex-wrap gap-2">
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-gray-200 rounded-full h-2 mb-2 overflow-hidden">
-            <div class="bg-blue-500 h-2 rounded-full transition-all duration-700"
-                 data-progress="{{ item.progress }}">
-            </div>
+            <a href="/course/{{ course.id }}/"
+               class="bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                Open
+            </a>
+
+            <a href="/add-lesson/{{ course.id }}/"
+               class="bg-purple-600 text-white px-3 py-1 rounded text-sm">
+                Add Lesson
+            </a>
+
+            <a href="/add-assignment/{{ course.id }}/"
+               class="bg-orange-600 text-white px-3 py-1 rounded text-sm">
+                Add Assignment
+            </a>
+
+            <a href="/mark-attendance/{{ course.id }}/"
+               class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+                Attendance
+            </a>
+
         </div>
-
-        <!-- Percentage -->
-        <p class="text-xs text-gray-500 mb-4">
-            {{ item.progress }}% completed
-        </p>
-
-        <!-- CTA -->
-        <a href="/course/{{ item.course.id }}/"
-           class="inline-block text-blue-600 text-sm font-medium hover:underline">
-            Continue Learning →
-        </a>
 
     </div>
 
 </div>
+
+{% empty %}
+
+<p class="text-gray-500">No courses created yet.</p>
+
 {% endfor %}
 
 </div>
 
-<!-- 🔥 SCRIPT -->
-<script>
-    document.querySelectorAll('[data-progress]').forEach(el => {
-        el.style.width = el.getAttribute('data-progress') + '%';
-    });
-</script>
+
+{% else %}
+
+<!-- STUDENT DASHBOARD -->
+
+<h2 class="text-xl font-semibold mb-6">Your Courses</h2>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+{% for item in data %}
+
+<div class="bg-white shadow rounded-xl p-5">
+
+<h3 class="font-semibold text-lg mb-3">
+{{ item.course.title }}
+</h3>
+
+
+<!-- PROGRESS -->
+
+<div class="mb-4">
+
+<p class="text-sm text-gray-500 mb-1">
+Course Progress
+</p>
+
+<div class="bg-gray-200 h-2 rounded-full">
+<div class="bg-blue-600 h-2 rounded-full"
+style="width: {{ item.progress }}%">
+</div>
+</div>
+
+<p class="text-xs text-gray-500 mt-1">
+{{ item.progress }}% completed
+</p>
+
+</div>
+
+
+<!-- ATTENDANCE -->
+
+<div class="mb-4">
+
+<p class="text-sm text-gray-500 mb-1">
+Attendance
+</p>
+
+<div class="bg-gray-200 h-2 rounded-full">
+<div class="bg-green-600 h-2 rounded-full"
+style="width: {{ item.attendance }}%">
+</div>
+</div>
+
+<p class="text-xs text-gray-500 mt-1">
+{{ item.attendance }}% attendance
+</p>
+
+</div>
+
+
+<a href="/course/{{ item.course.id }}/"
+class="text-blue-600 text-sm font-medium">
+Open Course →
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
 
 {% endblock %}

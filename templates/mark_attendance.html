@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-6">
+Mark Attendance - {{ course.title }}
+</h1>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="space-y-4">
+
+{% for student in students %}
+
+<div class="flex items-center justify-between bg-white p-4 rounded shadow">
+
+<span>{{ student.user.username }}</span>
+
+<select name="student_{{ student.user.id }}" class="border p-2 rounded">
+
+<option value="present">Present</option>
+<option value="absent">Absent</option>
+
+</select>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<button class="mt-6 bg-blue-600 text-white px-5 py-2 rounded">
+Save Attendance
+</button>
+
+</form>
+
+{% endblock %}

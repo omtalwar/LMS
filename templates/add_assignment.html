@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-6">Create Assignment</h1>
+
+<form method="POST" enctype="multipart/form-data"
+class="bg-white shadow rounded-xl p-6 max-w-xl space-y-4">
+
+{% csrf_token %}
+
+<div>
+<label class="block text-sm mb-1">Title</label>
+<input type="text"
+name="title"
+class="w-full border rounded p-2"
+required>
+</div>
+
+<div>
+<label class="block text-sm mb-1">Description</label>
+<textarea name="description"
+class="w-full border rounded p-2"></textarea>
+</div>
+
+<div>
+<label class="block text-sm mb-1">Deadline</label>
+<input type="datetime-local"
+name="deadline"
+class="w-full border rounded p-2">
+</div>
+
+<div>
+<label class="block text-sm mb-1">Instruction File</label>
+<input type="file"
+name="file"
+class="w-full">
+</div>
+
+<button type="submit"
+class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+Create Assignment
+</button>
+
+</form>
+
+{% endblock %}

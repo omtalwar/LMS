@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Course, Lesson, Enrollment, LessonCompletion, Category
+from .models import Course, Lesson, Enrollment, LessonCompletion, Category, Profile
 
 
 # 🔥 Inline: Enrollments under User
@@ -17,9 +17,16 @@ class LessonCompletionInline(admin.TabularInline):
     extra = 0
 
 
+# 🔥 🔥 NEW: Profile Inline (THIS IS IMPORTANT)
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = "Profile"
+
+
 # 🔥 Custom User Admin
 class CustomUserAdmin(UserAdmin):
-    inlines = [EnrollmentInline, LessonCompletionInline]
+    inlines = [ProfileInline, EnrollmentInline, LessonCompletionInline]
 
 
 # 🔥 Re-register User with custom admin
